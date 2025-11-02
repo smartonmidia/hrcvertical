@@ -15,7 +15,7 @@
         * {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
         
         html,
@@ -24,7 +24,7 @@
             background: #000;
             font-family: "Noto Sans", sans-serif;
             color: #fff;
-            overflow: hidden;
+            overflow: hidden
         }
         /* CENÁRIO */
         
@@ -35,71 +35,111 @@
             background-image: url("https://png.pngtree.com/background/20250116/original/pngtree-astrological-zodiac-horoscope-wheel-with-planet-earth-the-power-of-the-picture-image_15515334.jpg");
             background-size: cover;
             background-position: center;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: flex-start;
+            overflow: hidden;
         }
-        /* PAINEL */
+        /* PAINEL - desktop */
         
         .panel {
             width: calc(var(--panel-w, 35%) - 96px);
-            min-width: 310px;
-            height: 90vh;
-            background: rgba(0, 0, 0, 0.6);
+            min-width: 360px;
+            max-width: 520px;
+            height: 80vh;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.55));
             backdrop-filter: blur(8px);
             color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 60px 50px;
-            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
+            padding: 64px 56px;
+            box-shadow: 8px 20px 80px rgba(0, 0, 0, 0.6);
             position: absolute;
             left: 96px;
-            /* Afasta da borda esquerda */
+            /* distância da esquerda */
             top: 50%;
             transform: translateY(-50%);
             border-radius: 20px;
-            animation: slideIn 1.2s ease-out forwards;
+            animation: slideIn 1.0s cubic-bezier(.2, .9, .2, 1) forwards;
             opacity: 0;
         }
+        /* animação entrada */
         
         @keyframes slideIn {
             from {
                 transform: translate(-60px, -50%);
-                opacity: 0;
+                opacity: 0
             }
             to {
                 transform: translate(0, -50%);
-                opacity: 1;
+                opacity: 1
             }
         }
-        /* TEXTO */
+        /* textos internos (entradas em sequência já existentes) */
+        
+        .panel .date,
+        .panel .title,
+        .panel .desc {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp .9s ease-out forwards
+        }
+        
+        .panel .date {
+            animation-delay: .5s
+        }
+        
+        .panel .title {
+            animation-delay: .8s
+        }
+        
+        .panel .desc {
+            animation-delay: 1.0s
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+        /* DATA */
         
         .date {
             position: absolute;
-            top: 25px;
-            left: 70px;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.75);
+            top: 24px;
+            left: 48px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, .85);
+            letter-spacing: .6px;
+            text-transform: lowercase;
         }
+        /* TITULO - desktop */
         
         .title {
-            font-size: 70px;
-            font-weight: 700;
+            font-size: 56px;
+            line-height: 0.95;
+            font-weight: 800;
             color: var(--accent);
-            text-transform: capitalize;
-            text-align: left;
             margin-bottom: 8px;
-            text-shadow: 0 0 8px rgba(255, 209, 102, 0.25);
+            text-shadow: 0 6px 20px rgba(0, 0, 0, .6);
+            text-align: left;
+            word-break: break-word;
         }
+        /* DESCRIÇÃO - desktop */
         
         .desc {
-            font-size: 30px;
-            line-height: 1.4;
+            font-size: 22px;
+            line-height: 1.45;
             color: #fff;
-            max-width: 90%;
-            margin-top: 5px;
+            max-width: 100%;
+            margin-top: 6px;
+            text-align: left;
         }
         /* LOGO */
         
@@ -109,71 +149,102 @@
             top: 18px;
             width: 200px;
             z-index: 6;
-            filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
+            filter: drop-shadow(0 6px 20px rgba(0, 0, 0, .6));
             opacity: 1;
         }
-        /* LINHA DE BASE */
+        /* DIVIDER */
         
         .divider {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 10px;
+            bottom: 12px;
             height: 4px;
             width: 120px;
-            background: linear-gradient( 90deg, rgba(255, 255, 255, 0.06), rgba(255, 209, 102, 0.14), rgba(255, 255, 255, 0.06));
-            border-radius: 4px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, .06), rgba(255, 209, 102, .12), rgba(255, 255, 255, .06));
+            border-radius: 4px
         }
-        /* 📱 RESPONSIVIDADE — VERTICAL / RETRATO */
+        /* --- MODO RETRATO / VERTICAL --- */
+        /* media query prioriza telas altas (portrait) */
         
-        @media (max-width: 900px) {
+        @media (orientation: portrait),
+        (max-width:900px) {
+            html,
             body {
-                overflow-y: auto;
+                overflow: auto
             }
             .stage {
-                flex-direction: column;
                 justify-content: center;
-                align-items: center;
-                padding: 40px 0;
+                align-items: flex-start;
+                padding: 32px 0
             }
+            /* painel maior e centralizado para retrato */
             .panel {
-                position: static;
+                position: relative;
+                left: 0;
+                transform: none;
                 width: 92%;
+                max-width: 820px;
+                min-width: 0;
                 height: auto;
-                min-height: 60vh;
-                padding: 40px 28px;
+                padding: 36px 28px;
                 border-radius: 24px;
-                text-align: center;
-                box-shadow: none;
+                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+                display: flex;
+                align-items: flex-start;
+                gap: 16px;
+                flex-direction: column;
+                margin: 0 auto;
             }
             .date {
                 position: static;
-                font-size: 18px;
-                margin-bottom: 12px;
-                text-align: center;
+                align-self: center;
+                font-size: 16px;
+                margin-bottom: 6px;
+                text-transform: lowercase;
             }
+            /* opcional: título vertical centralizado (com rotação legível)
+     com writing-mode: vertical-rl -> texto de cima para baixo
+     Se preferir horizontal, comente writing-mode + transform */
             .title {
-                font-size: clamp(36px, 6vw, 48px);
-                margin: 10px 0 12px;
-            }
-            .desc {
-                font-size: clamp(20px, 4.5vw, 26px);
-                line-height: 1.5;
+                font-size: 48px;
+                margin: 6px 0;
                 text-align: center;
-                margin: 10px auto 0;
-                max-width: 100%;
+                line-height: 1;
+                /* Ativar leitura vertical (opcional) */
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                transform: rotate(180deg);
+                /* rota 180 para estilo similar ao screenshot; remova se quiser leitura top->bottom */
+                letter-spacing: 1px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            /* descrição fica imediatamente abaixo do título, mais próxima */
+            .desc {
+                font-size: 20px;
+                line-height: 1.5;
+                max-width: 88%;
+                margin: 12px auto 18px;
+                text-align: center;
             }
             .logo {
                 position: relative;
+                width: 140px;
+                margin: 0 auto 6px;
                 top: 0;
                 right: 0;
-                margin: 0 auto 20px;
-                width: 160px;
             }
             .divider {
-                bottom: 20px;
+                bottom: 22px
             }
         }
+        /* Se quiser o título horizontal em retrato, comente (ou remova) as regras writing-mode/transform acima
+   e adicione este bloco para título horizontal:
+@media (orientation: portrait) {
+  .title{ writing-mode: horizontal-tb; transform:none; font-size: clamp(28px, 7vw, 48px); }
+}
+*/
     </style>
 </head>
 
