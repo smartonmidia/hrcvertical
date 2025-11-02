@@ -208,6 +208,15 @@
                 flex-direction: column;
                 justify-content: center;
                 align-items: flex-start;
+                /* Quando a tela estiver na vertical (modo retrato / 90°) */
+@media (orientation: portrait) {
+    .panel {
+        width: 120%;      /* aumenta a largura do painel */
+        left: -10%;       /* centraliza visualmente */
+        padding: 32px 80px;  /* ajusta o espaçamento interno */
+        min-height: 200px;   /* opcional: aumenta um pouco a altura */
+    }
+}
             }
             .date {
                 position: absolute;
@@ -425,3 +434,4 @@
 
 
 </html>
+
