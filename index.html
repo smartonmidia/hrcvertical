@@ -185,81 +185,57 @@
             filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
             opacity: 1;
         }
-        /* Ajustes para telas com pouca altura (ex: rotacionamento em 90°) */
+        /* 📏 Ajuste para telas deitada (paisagem, 90°) */
         
-        @media (max-height: 620px) {
+        @media (orientation: landscape) and (max-height: 620px) {
             .panel {
-                /* aumentar largura para evitar painel muito fino em telas "baixas" */
-                width: clamp(460px, 54vw, 920px);
-                left: clamp(24px, 4vw, 96px);
-                padding: 48px 40px;
-            }
-            .title {
-                font-size: clamp(30px, 5.5vw, 64px)
-            }
-            .desc {
-                font-size: clamp(16px, 2.5vw, 22px);
-                max-width: 88%
-            }
-        }
-        /* RETRATO / VERTICAL — painel se torna um card centralizado (mais largo) */
-        
-        @media (orientation: portrait),
-        (max-width: 900px) {
-            html,
-            body {
-                overflow: auto
-            }
-            .panel {
-                position: relative;
+                position: absolute;
+                bottom: 0;
                 left: 0;
-                top: 0;
-                bottom: auto;
-                width: min(92%, 900px);
-                min-width: 0;
+                width: 100%;
+                /* ocupa toda a largura */
                 height: auto;
-                /* deixa o painel ajustar a altura */
-                padding: 36px 22px 56px;
-                margin: 28px auto;
-                border-radius: 20px;
-                justify-content: flex-start;
-                /* permite data no topo e conteúdo abaixo */
-                align-items: center;
+                min-height: 180px;
+                /* altura mínima da faixa */
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7));
+                backdrop-filter: blur(10px);
+                border-radius: 0;
+                /* tira o arredondamento */
+                box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.6);
+                padding: 28px 64px;
+                /* espaçamento interno */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
             }
             .date {
                 position: absolute;
-                top: 18px;
-                left: 22px;
-                font-size: 15px;
+                top: 12px;
+                left: 64px;
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.8);
             }
             .title {
-                align-self: center;
-                text-align: center;
-                font-size: clamp(28px, 7.6vw, 48px);
-                margin-top: 44px;
-                /* garante espaço da data fixa */
+                font-size: clamp(28px, 4vw, 42px);
+                color: #ffd166;
+                margin: 0;
             }
             .desc {
-                text-align: center;
-                margin-top: 10px;
-                font-size: clamp(16px, 4.4vw, 22px);
+                font-size: clamp(16px, 2vw, 22px);
+                margin-top: 6px;
+                line-height: 1.4;
                 max-width: 92%;
             }
             .divider {
-                bottom: 18px
+                display: none;
+                /* opcional — esconde a linha decorativa */
             }
-        }
-        /* Pequenos refinamentos para telas muito largas (desktop grandes) */
-        
-        @media (min-width: 2000px) {
-            .panel {
-                width: clamp(540px, 36vw, 1000px)
-            }
-            .title {
-                font-size: clamp(48px, 4.5vw, 96px)
-            }
-            .desc {
-                font-size: clamp(20px, 1.8vw, 34px)
+            .logo {
+                position: absolute;
+                right: 32px;
+                bottom: 20px;
+                width: 140px;
             }
         }
     </style>
