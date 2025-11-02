@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Horóscopo Diário</title>
+    <style>
+         :root {
+            --accent: #ffd166;
+            --panel-w: 32%;
+        }
+        /* RESET */
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            background: #000;
+            font-family: "Noto Sans", sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+        /* CENÁRIO */
+        
+        .stage {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background-image: url("https://png.pngtree.com/background/20250116/original/pngtree-astrological-zodiac-horoscope-wheel-with-planet-earth-the-power-of-the-picture-image_15515334.jpg");
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        /* PAINEL */
+        
+        .panel {
+            width: calc(var(--panel-w, 35%) - 96px);
+            min-width: 310px;
+            height: 90vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 50px;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
+            position: absolute;
+            left: 96px;
+            /* Afasta da borda esquerda */
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 20px;
+            animation: slideIn 1.2s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translate(-60px, -50%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(0, -50%);
+                opacity: 1;
+            }
+        }
+        /* TEXTO */
+        
+        .date {
+            position: absolute;
+            top: 25px;
+            left: 70px;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+        
+        .title {
+            font-size: 70px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: capitalize;
+            text-align: left;
+            margin-bottom: 8px;
+            text-shadow: 0 0 8px rgba(255, 209, 102, 0.25);
+        }
+        
+        .desc {
+            font-size: 30px;
+            line-height: 1.4;
+            color: #fff;
+            max-width: 90%;
+            margin-top: 5px;
+        }
+        /* LOGO */
+        
+        .logo {
+            position: absolute;
+            right: 28px;
+            top: 18px;
+            width: 200px;
+            z-index: 6;
+            filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
+            opacity: 1;
+        }
+        /* LINHA DE BASE */
+        
+        .divider {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 10px;
+            height: 4px;
+            width: 120px;
+            background: linear-gradient( 90deg, rgba(255, 255, 255, 0.06), rgba(255, 209, 102, 0.14), rgba(255, 255, 255, 0.06));
+            border-radius: 4px;
+        }
+        /* 📱 RESPONSIVIDADE — VERTICAL / RETRATO */
+        
+        @media (max-width: 900px) {
+            body {
+                overflow-y: auto;
+            }
+            .stage {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 40px 0;
+            }
+            .panel {
+                position: static;
+                width: 92%;
+                height: auto;
+                min-height: 60vh;
+                padding: 40px 28px;
+                border-radius: 24px;
+                text-align: center;
+                box-shadow: none;
+            }
+            .date {
+                position: static;
+                font-size: 18px;
+                margin-bottom: 12px;
+                text-align: center;
+            }
+            .title {
+                font-size: clamp(36px, 6vw, 48px);
+                margin: 10px 0 12px;
+            }
+            .desc {
+                font-size: clamp(20px, 4.5vw, 26px);
+                line-height: 1.5;
+                text-align: center;
+                margin: 10px auto 0;
+                max-width: 100%;
+            }
+            .logo {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 0 auto 20px;
+                width: 160px;
+            }
+            .divider {
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stage" role="main" aria-label="Painel de horóscopo diário">
+        <img class="logo" src="img/UOL LOGO.png" alt="logo">
+
+        <section class="panel" aria-live="polite">
+            <div class="date" id="dateEl">—</div>
+            <h1 class="title" id="titleEl">Título</h1>
+            <p class="desc" id="descEl">Descrição</p>
+        </section>
+
+        <div class="right-space" aria-hidden="true"></div>
+        <div class="divider" aria-hidden="true"></div>
+    </div>
+
+    <script>
+        (function() {
+            const SIGNS = ["Áries", "Touro", "Gêmeos", "Câncer", "Leão", "Virgem", "Libra", "Escorpião", "Sagitário", "Capricórnio", "Aquário", "Peixes"];
+
+            const PHRASES = [
+                "Pode ser um dia em que antigas emoções voltam à tona, mas você terá maturidade e serenidade para lidar com elas.",
+                "A energia de hoje favorece decisões conscientes, especialmente sobre o que você vinha adiando há algum tempo.",
+                "Um ciclo emocional chega ao fim e abre espaço para novas oportunidades e relações mais equilibradas.",
+                "O céu de hoje pede foco, mas também flexibilidade diante do que foge ao controle.",
+                "Há uma clareza especial no ar: você pode entender melhor o que antes parecia confuso.",
+                "A energia favorece recomeços desde que venham acompanhados de intenção e propósito.",
+                "Hoje é um bom dia para transformar pequenas mudanças em grandes avanços.",
+                "Você pode se surpreender com sua própria força ao encarar desafios que antes pareciam intransponíveis.",
+                "Questões antigas podem se resolver com diálogo e empatia, desde que haja disposição para ouvir.",
+                "Um reencontro pode trazer lembranças, mas também curas e novos entendimentos.",
+                "Hoje o universo te convida a agir com mais leveza e menos cobrança interna.",
+                "O momento pede calma, nem tudo precisa ser resolvido agora, mas algo precisa ser iniciado.",
+                "Sua intuição estará mais afiada, siga o que o coração aponta, mas mantenha os pés no chão.",
+                "A energia é de reorganização, revise planos, prioridades e intenções.",
+                "Pequenos gestos podem gerar grandes resultados se forem feitos com consciência.",
+                "O dia favorece reconciliações desde que venham acompanhadas de verdade e respeito.",
+                "Uma boa notícia pode chegar de forma discreta, mas mudar completamente o rumo do seu dia.",
+                "Há força e estabilidade nas suas ações, confie no que você construiu até aqui.",
+                "Hoje, a melhor estratégia é agir com serenidade, mesmo em meio ao caos.",
+                "A energia do dia te lembra que tudo o que é sólido nasce do tempo e da paciência.",
+                "A clareza emocional aumenta, permitindo enxergar o que realmente merece seu investimento.",
+                "Mudanças internas começam a refletir em resultados externos, confie nesse processo.",
+                "É um bom momento para dar um passo em direção a algo que você vem planejando há tempos.",
+                "A energia pede desapego, o novo só entra quando o antigo é deixado para trás.",
+                "Hoje, você pode entender o motivo por trás de situações que antes pareciam injustas.",
+                "O universo favorece conversas francas, mas é essencial escolher o tom e o momento certo.",
+                "Um gesto de sinceridade pode abrir portas e restaurar vínculos importantes.",
+                "Hoje, a sorte se manifesta na forma de boas conexões e encontros inesperados.",
+                "A sensibilidade está ampliada, use-a como ferramenta de compreensão, não de reatividade.",
+                "O dia traz uma energia propícia para curar relações e fortalecer laços.",
+                "A mente ganha clareza quando o coração encontra calma. Busque esse equilíbrio.",
+                "Há um potencial de crescimento onde antes existia apenas dúvida.",
+                "Entenda que trabalho flui melhor quando há propósito em cada escolha.",
+                "Hoje é um bom dia para revisar metas e ajustar a rota com consciência.",
+                "As respostas que você procura podem surgir de uma conversa simples e autêntica.",
+                "O universo te convida a confiar mais em si e menos no medo de errar.",
+                "Um novo ciclo se aproxima e ele exige mais coragem do que certeza.",
+                "O passado pode bater à porta, mas agora você sabe como lidar com ele.",
+                "Há uma energia de cura e renovação emocional pairando sobre o dia.",
+                "O amor pede presença, escuta e disponibilidade genuína.",
+                "Hoje é um bom dia para transformar vulnerabilidade em força.",
+                "Seu olhar sobre o mundo muda, e com ele, mudam também suas prioridades.",
+                "Questões práticas exigem foco, mas o coração pede espaço para sentir.",
+                "Uma decisão tomada com calma terá efeitos duradouros.",
+                "O universo te lembra que cada desafio é um convite à expansão.",
+                "Um insight pode mudar a forma como você enxerga uma situação antiga.",
+                "Hoje, a paciência será sua maior aliada e também sua melhor defesa.",
+                "A energia está voltada para recomeços sólidos e conscientes.",
+                "Hoje o céu favorece iniciativas que unem emoção e estratégia.",
+                "Há algo importante se revelando nas entrelinhas, preste atenção aos sinais sutis.",
+                "Hoje, você pode descobrir que a solução estava mais perto do que imaginava.",
+                "O dia pede coragem para deixar ir o que já não faz sentido.",
+                "Um acontecimento simples pode carregar uma mensagem valiosa.",
+                "Sua energia vital se renova quando você escolhe o que te faz bem.",
+                "O universo recompensa atitudes autênticas e corajosas. Arrisque!",
+                "Há poder na pausa, o silêncio pode trazer mais respostas do que a pressa.",
+                "O dia favorece novas alianças e trocas construtivas. Aproveite para criar Conexões",
+                "É um bom momento para agir com diplomacia e sabedoria emocional.",
+                "Uma conversa sincera pode abrir caminho para uma reconciliação.",
+                "Hoje, o equilíbrio entre razão e emoção será essencial para o sucesso.",
+                "Você pode sentir um chamado forte para mudar de direção, escute-o com atenção.",
+                "A energia de hoje favorece escolhas maduras e bem fundamentadas.",
+                "Pequenos avanços podem representar grandes conquistas.",
+                "O universo pede leveza, confie no fluxo natural das coisas.",
+                "Um ciclo de aprendizados se encerra, abrindo espaço para novas experiências.",
+                "Hoje é um bom dia para reavaliar seus limites e reafirmar seu valor.",
+                "A clareza chega quando você se permite desacelerar.",
+                "O dia pode trazer um encontro que transforma a maneira como você vê algo ou alguém.",
+                "A energia está favorável à reconstrução de planos e relações.",
+                "O universo te incentiva a ser protagonista da sua própria história.",
+                "Hoje, você pode perceber que o que parecia um obstáculo era, na verdade, um direcionamento.",
+                "A intuição se torna uma bússola poderosa, confie nas percepções sutis.",
+                "A energia do dia favorece o equilíbrio entre o fazer e o sentir.",
+                "Um encerramento pode ser o início de algo mais alinhado e verdadeiro.",
+                "A estabilidade emocional vem quando você se permite confiar no tempo das coisas.",
+                "Hoje é um bom momento para cuidar do corpo e da mente com atenção.",
+                "O universo te apoia quando você escolhe agir com autenticidade.",
+                "Há beleza em começar de novo e sabedoria em saber quando parar.",
+                "O dia favorece atitudes práticas e intenções claras.",
+                "O ciclo que se abre traz aprendizado, força e a chance de reescrever sua própria história."
+            ];
+
+            function seededRandom(seed) {
+                return function() {
+                    seed = (seed * 9301 + 49297) % 233280;
+                    return seed / 233280;
+                };
+            }
+
+            function shuffleWithSeed(arr, seedNum) {
+                const rnd = seededRandom(seedNum);
+                const a = arr.slice();
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(rnd() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function todayKey(d) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
+            }
+
+            function formatDatePtBR(d) {
+                const dias = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+                const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+                return `${dias[d.getDay()]}, ${String(d.getDate()).padStart(2, '0')} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+            }
+
+            function getDailyAssignments() {
+                const today = new Date();
+                const key = todayKey(today);
+                try {
+                    const raw = localStorage.getItem('horoscope_assignments_v3');
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed.date === key && parsed.mapping) return parsed.mapping;
+                    }
+                } catch (e) {}
+
+                const seedNum = parseInt(todayKey(today).replace(/-/g, ''), 10);
+                const shuffled = shuffleWithSeed(PHRASES, seedNum);
+                const mapping = {};
+                for (let i = 0; i < SIGNS.length; i++) {
+                    mapping[SIGNS[i]] = shuffled[i % shuffled.length];
+                }
+
+                try {
+                    localStorage.setItem('horoscope_assignments_v3', JSON.stringify({
+                        date: key,
+                        mapping
+                    }));
+                } catch (e) {}
+
+                return mapping;
+            }
+
+            function pickSignForDisplay() {
+                const accessCount = parseInt(localStorage.getItem('horoscope_access_count') || '0', 10);
+                const newCount = accessCount + 1;
+                localStorage.setItem('horoscope_access_count', newCount.toString());
+                return SIGNS[newCount % SIGNS.length];
+            }
+
+            const dateEl = document.getElementById('dateEl');
+            const titleEl = document.getElementById('titleEl');
+            const descEl = document.getElementById('descEl');
+
+            const now = new Date();
+            const assignments = getDailyAssignments();
+            const sign = pickSignForDisplay();
+            const phrase = assignments[sign] || "—";
+
+            dateEl.textContent = formatDatePtBR(now);
+            titleEl.textContent = sign;
+            descEl.textContent = phrase;
+        })();
+    </script>
+</body>
+
+</html>
