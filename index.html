@@ -61,45 +61,40 @@
             z-index: 20;
         }
         /* 🪶 Painel */
+        /* 🪶 Painel */
         
         .panel {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            min-height: 260px;
+            min-height: 273px;
+            /* antes 260px → +12.7px (≈ meia polegada) */
             background: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
             backdrop-filter: blur(12px);
             box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.6);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 36px 72px;
-            gap: 32px;
+            padding: 42px 78px;
+            /* antes 36px 72px → +6px em cada direção */
+            gap: 36px;
+            /* antes 32px */
             z-index: 10;
             animation: fadeUp 1.1s ease forwards;
-        }
-        
-        @keyframes fadeUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
         
         .left-content {
             flex: 2;
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 32px;
+            /* antes 28px */
         }
         
         .sign-icon {
-            width: 110px;
+            width: 118px;
+            /* antes 110px */
             height: auto;
             filter: drop-shadow(0 0 18px rgba(255, 209, 102, 0.4));
         }
@@ -107,48 +102,24 @@
         .text-block {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
+            /* antes 12px */
         }
         
         .title {
-            font-size: clamp(42px, 5vw, 64px);
-            font-weight: 800;
-            color: var(--accent);
-            text-shadow: 0 4px 24px rgba(255, 209, 102, 0.25);
-            animation: glow 3s ease-in-out infinite alternate;
-            white-space: nowrap;
-        }
-        
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 8px rgba(255, 209, 102, 0.25);
-            }
-            to {
-                text-shadow: 0 0 18px rgba(255, 209, 102, 0.55);
-            }
+            font-size: clamp(44px, 5.2vw, 68px);
+            /* ligeiro aumento */
         }
         
         .desc {
-            font-size: clamp(20px, 2vw, 28px);
-            line-height: 1.45;
-            color: rgba(255, 255, 255, 0.95);
-            max-width: 80%;
-            opacity: 0.95;
-        }
-        
-        .right-content {
-            flex: 0.8;
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-start;
-            padding-top: 8px;
+            font-size: clamp(21px, 2.1vw, 30px);
+            /* ligeiro aumento */
+            line-height: 1.48;
         }
         
         .date {
-            font-size: 18px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-            text-transform: capitalize;
+            font-size: 19px;
+            /* antes 18px */
         }
         
         .divider {
@@ -407,6 +378,5 @@
         })();
     </script>
 </body>
-
 
 </html>
